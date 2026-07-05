@@ -16,6 +16,7 @@ builder.Services.AddDbContext<FitTrackerDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<IDailyLogService, DailyLogService>();
+builder.Services.AddScoped<IExerciseSessionService, ExerciseSessionService>();
 var app = builder.Build();
 
 

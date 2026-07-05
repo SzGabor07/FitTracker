@@ -25,7 +25,10 @@ namespace FitTracker.Services.Services
 
         public async Task<IEnumerable<DailyLog>> GetAllLogsAsync()
         {
-            return await _context.DailyLogs.ToListAsync();
+            return await _context.DailyLogs
+                .Include(d => d.Exercises)
+                .Include(d => d.Meals)
+                .ToListAsync();
         }
 
         public async Task<DailyLog?> GetLogByIdAsync(Guid id)

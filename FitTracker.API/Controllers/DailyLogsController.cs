@@ -1,4 +1,5 @@
 ﻿using FitTracker.Services.Interfaces;
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using FitTracker.Core.Entities;
