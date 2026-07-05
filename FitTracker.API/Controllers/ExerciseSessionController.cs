@@ -34,5 +34,24 @@ namespace FitTracker.API.Controllers
                 return StatusCode(500, "Hiba történt a mentés során. Ellenőrizd, hogy a megadott DailyLog ID létezik-e!");
             }
         }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateExercise(Guid id, [FromBody] ExerciseSession exercise)
+        {
+            var updatedExercise = await _exerciseService.UpdateExerciseAsync(id, exercise);
+            if (updatedExercise == null) return NotFound("A frissíteni kívánt gyakorlat nem található.");
+
+            return Ok(updatedExercise);
+        }
+
+        
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteExercise(Guid id)
+        {
+            var isDeleted = await _exerciseService.DeleteExerciseAsync(id);
+            if (!isDeleted) return NotFound("A törölni kívánt gyakorlat nem található.");
+
+            return NoContent();
+        }
     }
 }
