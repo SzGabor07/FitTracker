@@ -22,6 +22,45 @@ namespace FitTracker.Services.Services
             await _context.SaveChangesAsync();
             return newLog;
         }
+
+        public async Task<IEnumerable<DailyLog>> GetAllLogsAsync()
+        {
+            return await _context.DailyLogs.ToListAsync();
+        }
+
+        public async Task<DailyLog?> GetLogByIdAsync(Guid id)
+        {
+            
+            return await _context.DailyLogs.FindAsync(id);
+        }
+
         
+        public async Task<DailyLog?> UpdateLogAsync(Guid id, DailyLog updatedLog)
+        {
+            
+            var existingLog = await _context.DailyLogs.FindAsync(id);
+            if (existingLog == null) return null; 
+
+            
+            existingLog.Date = updatedLog.Date;
+            existingLog.DayType = updatedLog.DayType;
+            existingLog.BodyWeight = updatedLog.BodyWeight;
+
+            
+            await _context.SaveChangesAsync();
+            return existingLog;
+        }
+
+        
+        public async Task<bool> DeleteLogAsync(Guid id)
+        {
+            var log = await _context.DailyLogs.FindAsync(id);
+            if (log == null) return false;
+
+            
+            _context.DailyLogs.Remove(log);
+            await _context.SaveChangesAsync();
+            return true;
+        }
     }
 }
