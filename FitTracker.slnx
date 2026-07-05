@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="FitTracker.API/FitTracker.API.csproj" />
+  <Project Path="FitTracker.Core/FitTracker.Core.csproj" />
+  <Project Path="FitTracker.Data/FitTracker.Data.csproj" />
+  <Project Path="FitTracker.Services/FitTracker.Services.csproj" />
+</Solution>
