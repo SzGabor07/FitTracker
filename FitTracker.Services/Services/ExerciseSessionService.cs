@@ -47,5 +47,10 @@ namespace FitTracker.Services.Services
             await _context.SaveChangesAsync();
             return true;
         }
+
+        public async Task<ExerciseSession?> GetExerciseByIdAsync(Guid id)
+        {
+            return await _context.ExerciseSessions.FindAsync(id);
+        }
     }
 }
