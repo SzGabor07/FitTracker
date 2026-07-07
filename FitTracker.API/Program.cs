@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using FitTracker.Services.Interfaces;
 using FitTracker.Services.Services;
 using Scalar.AspNetCore;
+using FitTracker.API.Mappings;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,12 @@ builder.Services.AddDbContext<FitTrackerDbContext>(options =>
 
 builder.Services.AddScoped<IDailyLogService, DailyLogService>();
 builder.Services.AddScoped<IExerciseSessionService, ExerciseSessionService>();
+builder.Services.AddScoped<IMealLogService, MealLogService>();
+builder.Services.AddAutoMapper(cfg =>
+{
+    cfg.AddProfile<FitTrackerMappingProfile>();
+});
+
 var app = builder.Build();
 
 

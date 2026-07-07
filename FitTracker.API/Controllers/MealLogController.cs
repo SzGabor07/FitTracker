@@ -1,6 +1,7 @@
 ﻿using FitTracker.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using FitTracker.Core.Entities;
+using FitTracker.Core.DTOs;
 
 namespace FitTracker.API.Controllers
 {
@@ -16,7 +17,7 @@ namespace FitTracker.API.Controllers
         }
 
         [HttpPost("{dailyLogId}")]
-        public async Task<IActionResult> CreateMealLog(Guid dailyLogId, [FromBody] MealLog mealLog)
+        public async Task<IActionResult> CreateMealLog(Guid dailyLogId, [FromBody] MealLogCreateDto mealLog)
         {
             if (mealLog == null) return BadRequest("Invalid meal log data.");
             try
@@ -39,7 +40,7 @@ namespace FitTracker.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateMealLog(Guid id, [FromBody] MealLog mealLog)
+        public async Task<IActionResult> UpdateMealLog(Guid id, [FromBody] MealLogUpdateDto mealLog)
         {
             var updatedMealLog = await _mealLogService.UpdateMealLogAsync(id, mealLog);
             if (updatedMealLog == null) return NotFound("The meal log to be updated was not found.");

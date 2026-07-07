@@ -3,6 +3,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using FitTracker.Core.Entities;
+using FitTracker.Core.DTOs;
 
 namespace FitTracker.API.Controllers
 {
@@ -17,14 +18,14 @@ namespace FitTracker.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateLog([FromBody] DailyLog log)
+        public async Task<IActionResult> CreateLog([FromBody] DailyLogCreateDto logDto)
         {
-            if (log == null)
+            if (logDto == null)
             {
                 return BadRequest("Invalid log data.");
             }
 
-            var createdLog = await _dailyLogService.CreateLogAsync(log);
+            var createdLog = await _dailyLogService.CreateLogAsync(logDto);
             return CreatedAtAction(nameof(CreateLog), new { id = createdLog.Id }, createdLog);
         }
 
@@ -45,9 +46,9 @@ namespace FitTracker.API.Controllers
 
         
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateLog(Guid id, [FromBody] DailyLog log)
+        public async Task<IActionResult> UpdateLog(Guid id, [FromBody] DailyLogUpdateDto logDto)
         {
-            var updatedLog = await _dailyLogService.UpdateLogAsync(id, log);
+            var updatedLog = await _dailyLogService.UpdateLogAsync(id, logDto);
             if (updatedLog == null) return NotFound("The daily log to be updated was not found.");
             return Ok(updatedLog);
         }
@@ -59,6 +60,17 @@ namespace FitTracker.API.Controllers
             var isDeleted = await _dailyLogService.DeleteLogAsync(id);
             if (!isDeleted) return NotFound("The daily log to be deleted was not found.");
             return NoContent();
+        }
+
+        [HttpPost("seed")]
+        public async Task<IActionResult> SeedTestData()
+        {
+            var success = await _dailyLogService.SeedTestDataAsync();
+
+            if (!success)
+                return BadRequest("Az adatbázis már tartalmaz adatokat! Ha újra akarod seedelni, előbb töröld a meglévőket.");
+
+            return Ok("14 napnyi tesztadat (edzésekkel és étkezésekkel) sikeresen generálva!");
         }
     }
 }
