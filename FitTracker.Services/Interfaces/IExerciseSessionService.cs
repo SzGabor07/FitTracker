@@ -8,7 +8,7 @@ namespace FitTracker.Services.Interfaces
     public interface IExerciseSessionService
     {
         Task<ExerciseSession> AddExerciseToLogAsync(Guid dailyLogId, ExerciseSession exercise);
-
+        Task<ExerciseSession> GetExerciseByIdAsync(Guid id);
         Task<ExerciseSession?> UpdateExerciseAsync(Guid id, ExerciseSession updatedExercise);
         Task<bool> DeleteExerciseAsync(Guid id);
         

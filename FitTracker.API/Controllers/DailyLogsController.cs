@@ -39,7 +39,7 @@ namespace FitTracker.API.Controllers
         public async Task<IActionResult> GetLogById(Guid id)
         {
             var log = await _dailyLogService.GetLogByIdAsync(id);
-            if (log == null) return NotFound("A keresett napi napló nem található.");
+            if (log == null) return NotFound("The requested daily log was not found.");
             return Ok(log);
         }
 
@@ -48,7 +48,7 @@ namespace FitTracker.API.Controllers
         public async Task<IActionResult> UpdateLog(Guid id, [FromBody] DailyLog log)
         {
             var updatedLog = await _dailyLogService.UpdateLogAsync(id, log);
-            if (updatedLog == null) return NotFound("A frissíteni kívánt napló nem található.");
+            if (updatedLog == null) return NotFound("The daily log to be updated was not found.");
             return Ok(updatedLog);
         }
 
@@ -57,7 +57,7 @@ namespace FitTracker.API.Controllers
         public async Task<IActionResult> DeleteLog(Guid id)
         {
             var isDeleted = await _dailyLogService.DeleteLogAsync(id);
-            if (!isDeleted) return NotFound("A törölni kívánt napló nem található.");
+            if (!isDeleted) return NotFound("The daily log to be deleted was not found.");
             return NoContent();
         }
     }

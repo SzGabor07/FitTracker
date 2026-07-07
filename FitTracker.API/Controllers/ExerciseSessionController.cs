@@ -21,7 +21,7 @@ namespace FitTracker.API.Controllers
         [HttpPost("{dailyLogId}")]
         public async Task<IActionResult> AddExercise(Guid dailyLogId, [FromBody] ExerciseSession exercise)
         {
-            if (exercise == null) return BadRequest("Érvénytelen edzésadatok.");
+            if (exercise == null) return BadRequest("Invalid exercise data.");
 
             try
             {
@@ -31,15 +31,15 @@ namespace FitTracker.API.Controllers
             catch (Exception)
             {
             
-                return StatusCode(500, "Hiba történt a mentés során. Ellenőrizd, hogy a megadott DailyLog ID létezik-e!");
+                return StatusCode(500, "An error occurred while saving. Please check if the provided DailyLog ID exists!");
             }
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateExercise(Guid id, [FromBody] ExerciseSession exercise)
+        public async Task<IActionResult> UpdateExercise(Guid id, [FromBody] ExerciseSession exercise) 
         {
             var updatedExercise = await _exerciseService.UpdateExerciseAsync(id, exercise);
-            if (updatedExercise == null) return NotFound("A frissíteni kívánt gyakorlat nem található.");
+            if (updatedExercise == null) return NotFound("The exercise to be updated was not found.");
 
             return Ok(updatedExercise);
         }
@@ -49,9 +49,18 @@ namespace FitTracker.API.Controllers
         public async Task<IActionResult> DeleteExercise(Guid id)
         {
             var isDeleted = await _exerciseService.DeleteExerciseAsync(id);
-            if (!isDeleted) return NotFound("A törölni kívánt gyakorlat nem található.");
+            if (!isDeleted) return NotFound("The exercise to be deleted was not found.");
 
             return NoContent();
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetExercise(Guid id)
+        {
+            var exercise = await _exerciseService.GetExerciseByIdAsync(id);
+            if (exercise == null) return NotFound("The requested exercise was not found.");
+
+            return Ok(exercise);
         }
     }
 }
