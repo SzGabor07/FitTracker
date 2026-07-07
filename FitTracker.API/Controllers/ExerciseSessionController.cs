@@ -1,4 +1,5 @@
-﻿using FitTracker.Core.Entities;
+﻿using FitTracker.Core.DTOs;
+using FitTracker.Core.Entities;
 using FitTracker.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -19,13 +20,13 @@ namespace FitTracker.API.Controllers
 
         
         [HttpPost("{dailyLogId}")]
-        public async Task<IActionResult> AddExercise(Guid dailyLogId, [FromBody] ExerciseSession exercise)
+        public async Task<IActionResult> AddExercise(Guid dailyLogId, [FromBody] ExerciseSessionCreateDto exerciseDto)
         {
-            if (exercise == null) return BadRequest("Invalid exercise data.");
+            if (exerciseDto == null) return BadRequest("Invalid exercise data.");
 
             try
             {
-                var createdExercise = await _exerciseService.AddExerciseToLogAsync(dailyLogId, exercise);
+                var createdExercise = await _exerciseService.AddExerciseToLogAsync(dailyLogId, exerciseDto );
                 return CreatedAtAction(nameof(AddExercise), new { id = createdExercise.Id }, createdExercise);
             }
             catch (Exception)
@@ -36,9 +37,11 @@ namespace FitTracker.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateExercise(Guid id, [FromBody] ExerciseSession exercise) 
+        public async Task<IActionResult> UpdateExercise(Guid id, [FromBody] ExerciseSessionUpdateDto updateDto) 
         {
-            var updatedExercise = await _exerciseService.UpdateExerciseAsync(id, exercise);
+            if(updateDto == null) return BadRequest("Invalid exercise data.");
+        
+            var updatedExercise = await _exerciseService.UpdateExerciseAsync(id, updateDto);
             if (updatedExercise == null) return NotFound("The exercise to be updated was not found.");
 
             return Ok(updatedExercise);

@@ -4,38 +4,39 @@ using FitTracker.Data;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using FitTracker.Core.DTOs;
+using AutoMapper;
 
 namespace FitTracker.Services.Services
 {
     public class ExerciseSessionService : IExerciseSessionService
     {
         private readonly FitTrackerDbContext _context;
-        public ExerciseSessionService(FitTrackerDbContext context)
+        private readonly IMapper _mapper;
+        public ExerciseSessionService(FitTrackerDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
-        public async Task<ExerciseSession> AddExerciseToLogAsync(Guid dailyLogId, ExerciseSession exercise)
+        public async Task<ExerciseSessionResponseDto> AddExerciseToLogAsync(Guid dailyLogId, ExerciseSessionCreateDto newExerciseDto)
         {
+            var exercise = _mapper.Map<ExerciseSession>(newExerciseDto);
             exercise.DailyLogId = dailyLogId;
             await _context.ExerciseSessions.AddAsync(exercise);
             await _context.SaveChangesAsync();
 
-            return exercise;
+            return _mapper.Map<ExerciseSessionResponseDto>(exercise);
         }
 
-        public async Task<ExerciseSession?> UpdateExerciseAsync(Guid id, ExerciseSession updatedExercise)
+        public async Task<ExerciseSessionResponseDto?> UpdateExerciseAsync(Guid id, ExerciseSessionUpdateDto updatedDto)
         {
             var existingExercise = await _context.ExerciseSessions.FindAsync(id);
             if (existingExercise == null) return null;
 
-            
-            existingExercise.ExerciseName = updatedExercise.ExerciseName;
-            existingExercise.Sets = updatedExercise.Sets;
-            existingExercise.Reps = updatedExercise.Reps;
-            existingExercise.Weight = updatedExercise.Weight;
+            _mapper.Map(updatedDto, existingExercise);
 
             await _context.SaveChangesAsync();
-            return existingExercise;
+            return _mapper.Map<ExerciseSessionResponseDto>(existingExercise);
         }
 
         public async Task<bool> DeleteExerciseAsync(Guid id)
@@ -48,9 +49,10 @@ namespace FitTracker.Services.Services
             return true;
         }
 
-        public async Task<ExerciseSession?> GetExerciseByIdAsync(Guid id)
+        public async Task<ExerciseSessionResponseDto?> GetExerciseByIdAsync(Guid id)
         {
-            return await _context.ExerciseSessions.FindAsync(id);
+            var exercise = await _context.ExerciseSessions.FindAsync(id);
+            return exercise == null ? null : _mapper.Map<ExerciseSessionResponseDto>(exercise);
         }
     }
 }

@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using System.Text;
 using FitTracker.Core.Entities;
+using FitTracker.Core.DTOs;
 
 namespace FitTracker.Services.Interfaces
 {
     public interface IExerciseSessionService
     {
-        Task<ExerciseSession> AddExerciseToLogAsync(Guid dailyLogId, ExerciseSession exercise);
-        Task<ExerciseSession> GetExerciseByIdAsync(Guid id);
-        Task<ExerciseSession?> UpdateExerciseAsync(Guid id, ExerciseSession updatedExercise);
+        Task<ExerciseSessionResponseDto> AddExerciseToLogAsync(Guid dailyLogId, ExerciseSessionCreateDto newExerciseDto);
+        Task<ExerciseSessionResponseDto> GetExerciseByIdAsync(Guid id);
+        Task<ExerciseSessionResponseDto?> UpdateExerciseAsync(Guid id, ExerciseSessionUpdateDto updatedDto);
         Task<bool> DeleteExerciseAsync(Guid id);
         
     }
